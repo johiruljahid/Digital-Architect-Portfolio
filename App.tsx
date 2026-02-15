@@ -15,6 +15,8 @@ const App: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
+  const PROFILE_IMAGE_URL = "https://media.istockphoto.com/id/1338134319/photo/portrait-of-young-indian-businesswoman-or-school-teacher-pose-indoors.jpg?s=612x612&w=0&k=20&c=Dw1nKFtnU_Bfm2I3OPQxBmSKe9NtSzux6bHqa9lVZ7A=";
+
   const handleSubmitContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -74,7 +76,7 @@ const App: React.FC = () => {
             <div className="w-full md:w-1/3">
               <div className="aspect-square glass-card rounded-[2.5rem] p-4 rotate-2 hover:rotate-0 transition-all duration-700 shadow-xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&h=600&auto=format&fit=crop" 
+                  src={PROFILE_IMAGE_URL} 
                   alt="About" 
                   className="w-full h-full object-cover rounded-[2rem]"
                 />
@@ -247,7 +249,7 @@ const App: React.FC = () => {
           <div className="relative inline-block float-animation">
             <div className="w-44 h-44 md:w-52 md:h-52 rounded-full glass-card p-2 border-white shadow-2xl overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1519085175641-591d830462f4?q=80&w=400&h=400&auto=format&fit=crop" 
+                src={PROFILE_IMAGE_URL} 
                 alt="Shamim Ahmed" 
                 className="w-full h-full object-cover rounded-full"
               />
