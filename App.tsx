@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { Section } from './types';
-import { PROJECTS, EXPERIENCES, APPOINTMENT_SERVICES, TIME_SLOTS } from './constants';
-import { Navigation } from './components/Navigation';
-import { SectionModal } from './components/SectionModal';
-import { supabase } from './supabase';
+import { Section } from './types.ts';
+import { PROJECTS, EXPERIENCES, APPOINTMENT_SERVICES, TIME_SLOTS } from './constants.tsx';
+import { Navigation } from './components/Navigation.tsx';
+import { SectionModal } from './components/SectionModal.tsx';
+import { supabase } from './supabase.ts';
 
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<Section | null>(null);
