@@ -1,17 +1,16 @@
 
 import React, { useState } from 'react';
-import { Section } from './types.ts';
-import { PROJECTS, EXPERIENCES, APPOINTMENT_SERVICES, TIME_SLOTS } from './constants.tsx';
-import { Navigation } from './components/Navigation.tsx';
-import { SectionModal } from './components/SectionModal.tsx';
-import { supabase } from './supabase.ts';
+import { Section } from './types';
+import { PROJECTS, EXPERIENCES, APPOINTMENT_SERVICES, TIME_SLOTS } from './constants';
+import { Navigation } from './components/Navigation';
+import { SectionModal } from './components/SectionModal';
+import { supabase } from './supabase';
 
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<Section | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
-  // Form states for Appointment
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -31,14 +30,11 @@ const App: React.FC = () => {
 
     try {
       const { error } = await supabase.from('contacts').insert([payload]);
-      
       if (error) throw error;
-
-      setSubmissionStatus({ type: 'success', message: 'Transmission received. Data synced to Supabase.' });
+      setSubmissionStatus({ type: 'success', message: 'Transmission received. Data synced successfully.' });
       (e.target as HTMLFormElement).reset();
     } catch (err: any) {
-      console.error('Supabase Error:', err);
-      setSubmissionStatus({ type: 'error', message: `Sync failed: ${err.message || 'Unknown error'}` });
+      setSubmissionStatus({ type: 'error', message: `Sync failed: ${err.message || 'Database error'}` });
     } finally {
       setIsSubmitting(false);
     }
@@ -61,13 +57,10 @@ const App: React.FC = () => {
         time: selectedTime,
         created_at: new Date().toISOString(),
       }]);
-
       if (error) throw error;
-
-      setSubmissionStatus({ type: 'success', message: 'Temporal slot secured in database. Simulation complete.' });
+      setSubmissionStatus({ type: 'success', message: 'Appointment secured in database.' });
     } catch (err: any) {
-      console.error('Supabase Error:', err);
-      setSubmissionStatus({ type: 'error', message: `Booking failed: ${err.message || 'Unknown error'}` });
+      setSubmissionStatus({ type: 'error', message: `Booking failed: ${err.message}` });
     } finally {
       setIsSubmitting(false);
     }
@@ -135,11 +128,6 @@ const App: React.FC = () => {
                     alt={proj.title} 
                     className="w-full h-full object-cover rounded-[2rem] group-hover:scale-105 transition-transform duration-700" 
                   />
-                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2rem] flex items-center justify-center">
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-                      <svg className="w-6 h-6 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                    </div>
-                  </div>
                 </div>
                 <h4 className="text-sm font-black text-slate-800 mb-2 uppercase tracking-[0.2em] px-2">{proj.title}</h4>
                 <div className="flex items-center gap-2 text-blue-600 font-bold px-2">
@@ -154,18 +142,14 @@ const App: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-12">
             <div className="lg:w-1/3">
               <div className="glass-card p-10 rounded-[3rem] bg-white/40 h-full flex flex-col border-white">
-                <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white text-2xl mb-8 shadow-xl">
-                  📅
-                </div>
+                <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white text-2xl mb-8 shadow-xl">📅</div>
                 <h3 className="text-4xl font-black text-slate-900 mb-4 leading-none tracking-tighter">SECURE A SLOT</h3>
                 <p className="text-slate-500 font-medium mb-10 text-sm tracking-wide">Select a temporal window for your architectural consultation.</p>
-
                 {submissionStatus && (
                   <div className={`p-5 rounded-2xl mb-6 text-xs font-black uppercase tracking-widest text-center ${submissionStatus.type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
                     {submissionStatus.message}
                   </div>
                 )}
-
                 <button 
                   onClick={handleBookAppointment}
                   disabled={isSubmitting || !selectedService || !selectedDate || !selectedTime}
@@ -175,7 +159,6 @@ const App: React.FC = () => {
                 </button>
               </div>
             </div>
-            
             <div className="lg:w-2/3 space-y-12">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {APPOINTMENT_SERVICES.map(service => (
@@ -192,7 +175,6 @@ const App: React.FC = () => {
                   </button>
                 ))}
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <input 
                   type="date" 
@@ -224,7 +206,7 @@ const App: React.FC = () => {
                 { label: 'INSTANT COMMS', value: '+880 1700 000000', icon: '💬' },
                 { label: 'WORK PORTAL', value: 'Upwork Top Rated', icon: '⭐' }
               ].map((item, idx) => (
-                <div key={idx} className="p-8 glass-card rounded-[2rem] flex items-center gap-6 group hover:translate-x-2 transition-all cursor-pointer border-white">
+                <div key={idx} className="p-8 glass-card rounded-[2rem] flex items-center gap-6 group hover:translate-x-2 transition-all border-white">
                   <div className="text-3xl opacity-50 group-hover:opacity-100 transition-opacity">{item.icon}</div>
                   <div>
                     <div className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase mb-1">{item.label}</div>
@@ -233,7 +215,6 @@ const App: React.FC = () => {
                 </div>
               ))}
             </div>
-
             <div className="lg:w-1/2">
               <form className="glass-card p-10 rounded-[3rem] space-y-4 border-white" onSubmit={handleSubmitContact}>
                 <h3 className="text-xs font-black text-slate-400 tracking-[0.3em] uppercase mb-6">Encrypted Channel</h3>
@@ -257,14 +238,12 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen relative bg-[#f8fafc] selection:bg-blue-100 text-slate-900 overflow-hidden">
-      {/* Mesh Gradients Background */}
+    <div className="min-h-screen relative bg-[#f8fafc] text-slate-900 overflow-hidden">
       <div className="fixed top-[-20%] left-[-10%] w-[70vw] h-[70vw] rounded-full bg-blue-100/40 blur-[120px] -z-10" />
       <div className="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-indigo-100/30 blur-[120px] -z-10" />
       
       <main className="container mx-auto px-6 py-12 min-h-screen flex flex-col items-center justify-center">
-        
-        <div className="text-center space-y-10 animate-in fade-in slide-in-from-bottom duration-1000">
+        <div className="text-center space-y-10">
           <div className="relative inline-block float-animation">
             <div className="w-44 h-44 md:w-52 md:h-52 rounded-full glass-card p-2 border-white shadow-2xl overflow-hidden">
               <img 
@@ -273,25 +252,14 @@ const App: React.FC = () => {
                 className="w-full h-full object-cover rounded-full"
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-[#f8fafc]">
-              <span className="text-xl">✨</span>
-            </div>
           </div>
-
           <div className="space-y-6">
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-slate-900 leading-tight">
-              SHAMIM AHMED
-            </h1>
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-slate-900 leading-tight">SHAMIM AHMED</h1>
             <div className="flex items-center justify-center gap-3">
-              <div className="h-[1px] w-8 bg-slate-300" />
-              <span className="text-xs md:text-sm font-black tracking-[0.6em] text-blue-600 uppercase">
-                Digital Architect
-              </span>
-              <div className="h-[1px] w-8 bg-slate-300" />
+              <span className="text-xs md:text-sm font-black tracking-[0.6em] text-blue-600 uppercase">Digital Architect</span>
             </div>
           </div>
         </div>
-
         <Navigation onSelect={(s) => setActiveSection(s)} />
       </main>
 
@@ -308,9 +276,7 @@ const App: React.FC = () => {
       </SectionModal>
 
       <footer className="fixed bottom-8 left-0 right-0 text-center pointer-events-none">
-        <span className="text-[10px] font-black tracking-[1.2em] text-slate-300 uppercase">
-          EST. 2017 &bull; BUILT FOR SCALE
-        </span>
+        <span className="text-[10px] font-black tracking-[1.2em] text-slate-300 uppercase">EST. 2017 &bull; BUILT FOR SCALE</span>
       </footer>
     </div>
   );
