@@ -1,3 +1,3 @@
 
-// Firebase service removed
+// Deprecated: Replaced by Supabase
 export const db = null;
